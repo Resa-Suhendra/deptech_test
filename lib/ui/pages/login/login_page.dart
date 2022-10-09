@@ -17,8 +17,8 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
 
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  final emailController = TextEditingController(text: "resa@gmail.com");
+  final passwordController = TextEditingController(text: "qwqw1234");
 
   @override
   Widget build(BuildContext context) {
@@ -42,130 +42,130 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   height: setHeight(60),
                 ),
-                ChangeNotifierProvider(
-                  create: (context) => AdminProvider(),
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(borderRadius)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Email",
-                              style: styleSubtitle.copyWith(
-                                fontSize: setFontSize(50),
-                              ),
+                Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(borderRadius)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Email",
+                            style: styleSubtitle.copyWith(
+                              fontSize: setFontSize(50),
                             ),
-                            SizedBox(
-                              height: setHeight(20),
-                            ),
-                            TextFormField(
-                              controller: emailController,
-                              keyboardType: TextInputType.emailAddress,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter email';
-                                } else if (!value.isValidEmail) {
-                                  return 'Please enter valid email';
-                                }
-                                return null;
-                              },
-                              decoration: InputDecoration(
-                                  isDense: true,
-                                  border: OutlineInputBorder(
-                                      gapPadding: 0,
-                                      borderRadius:
-                                          BorderRadius.circular(borderRadius))),
-                            ),
-                            SizedBox(
-                              height: setHeight(100),
-                            ),
-                            Text(
-                              "Password",
-                              style: styleSubtitle.copyWith(
-                                fontSize: setFontSize(50),
-                              ),
-                            ),
-                            SizedBox(
-                              height: setHeight(20),
-                            ),
-                            TextFormField(
-                              controller: passwordController,
-                              obscureText: true,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter password';
-                                }
-                                return null;
-                              },
-                              keyboardType: TextInputType.visiblePassword,
-                              decoration: InputDecoration(
+                          ),
+                          SizedBox(
+                            height: setHeight(20),
+                          ),
+                          TextFormField(
+                            controller: emailController,
+                            keyboardType: TextInputType.emailAddress,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter email';
+                              } else if (!value.isValidEmail) {
+                                return 'Please enter valid email';
+                              }
+                              return null;
+                            },
+                            decoration: InputDecoration(
                                 isDense: true,
                                 border: OutlineInputBorder(
-                                  gapPadding: 0,
-                                  borderRadius:
-                                      BorderRadius.circular(borderRadius),
-                                ),
+                                    gapPadding: 0,
+                                    borderRadius:
+                                        BorderRadius.circular(borderRadius))),
+                          ),
+                          SizedBox(
+                            height: setHeight(100),
+                          ),
+                          Text(
+                            "Password",
+                            style: styleSubtitle.copyWith(
+                              fontSize: setFontSize(50),
+                            ),
+                          ),
+                          SizedBox(
+                            height: setHeight(20),
+                          ),
+                          TextFormField(
+                            controller: passwordController,
+                            obscureText: true,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter password';
+                              }
+                              return null;
+                            },
+                            keyboardType: TextInputType.visiblePassword,
+                            decoration: InputDecoration(
+                              isDense: true,
+                              border: OutlineInputBorder(
+                                gapPadding: 0,
+                                borderRadius:
+                                    BorderRadius.circular(borderRadius),
                               ),
                             ),
-                            SizedBox(
-                              height: setHeight(100),
-                            ),
-                            Consumer<AdminProvider>(
-                                builder: (context, adminProvider, _) {
-                              return TextButton(
-                                onPressed: () async {
-                                  if (_formKey.currentState!.validate()) {
+                          ),
+                          SizedBox(
+                            height: setHeight(100),
+                          ),
+                          Consumer<AdminProvider>(
+                              builder: (context, adminProvider, _) {
+                            return TextButton(
+                              onPressed: () async {
+                                if (_formKey.currentState!.validate()) {
+                                  adminProvider.setLoadingLogin(true);
+                                  AdminModel? data =
+                                      await adminProvider.loginAdmin(
+                                          emailController.text,
+                                          passwordController.text);
 
-                                    adminProvider.setLoadingLogin(true);
-                                    AdminModel? data = await adminProvider.loginAdmin(emailController.text, passwordController.text);
-                                    ScaffoldMessenger.of(context).showSnackBar(
+                                  await Future.delayed(
+                                      const Duration(seconds: 2));
+                                  if (data != null) {
+                                    navigate
+                                        .pushToRemoveUntil(routeDashboard);
+                                    adminProvider.setLoadingLogin(false);
+                                  } else {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(
                                       const SnackBar(
-                                          content: Text('Processing Data')),
-                                    );
-
-
-                                    await Future.delayed(const Duration(seconds: 1));
-                                    if (data != null) {
-                                      adminProvider.setLoadingLogin(false);
-                                      navigate.pushToRemoveUntil(routeDashboard);
-                                    } else {
-                                      adminProvider.setLoadingLogin(false);
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(
-                                            content: Text("Login ")),
-                                      );
-                                    }
-                                  }
-                                },
-                                style: TextButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(borderRadius)),
-                                  backgroundColor: primaryColor,
-                                  foregroundColor: Colors.white,
-                                  minimumSize: const Size.fromHeight(50), //
-                                ),
-                                child: adminProvider.isLoadingLogin
-                                    ? const CircularProgressIndicator(
-                                        color: Colors.white,
-                                      )
-                                    : Text(
-                                        'Login',
-                                        style: styleTitle.copyWith(
-                                          fontSize: setFontSize(50),
-                                          color: Colors.white,
-                                        ),
+                                        backgroundColor: Colors.red,
+                                        content: Text(
+                                            "Login failed, invalid email or password."),
                                       ),
-                              );
-                            })
-                          ],
-                        ),
+                                    );
+                                    adminProvider.setLoadingLogin(false);
+                                  }
+                                }
+                              },
+                              style: TextButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.circular(borderRadius)),
+                                backgroundColor: primaryColor,
+                                foregroundColor: Colors.white,
+                                minimumSize: const Size.fromHeight(50), //
+                              ),
+                              child: adminProvider.isLoadingLogin
+                                  ? const CircularProgressIndicator(
+                                      color: Colors.white,
+                                    )
+                                  : Text(
+                                      'Login',
+                                      style: styleTitle.copyWith(
+                                        fontSize: setFontSize(50),
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                            );
+                          })
+                        ],
                       ),
                     ),
                   ),

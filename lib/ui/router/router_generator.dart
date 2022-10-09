@@ -1,5 +1,7 @@
+import 'package:deptech_test/ui/pages/admin/edit_profile_page.dart';
 import 'package:deptech_test/ui/pages/dashboard/dashboard_page.dart';
 import 'package:deptech_test/ui/pages/login/login_page.dart';
+import 'package:deptech_test/ui/pages/notes/add_notes_page.dart';
 import 'package:deptech_test/ui/pages/splash/splash_page.dart';
 import 'package:deptech_test/ui/router/route_list.dart';
 import 'package:flutter/material.dart';
@@ -32,12 +34,26 @@ class RouterGenerator {
           settings: const RouteSettings(name: routeSplash),
         );
 
-      /// Restaurant group
-      //   case routeRestaurant:
-      //     return MaterialPageRoute(
-      //       builder: (_) => const RestaurantScreen(),
-      //       settings: const RouteSettings(name: routeRestaurant),
-      //     );
+      /// Admin group
+      case routeEditProfile:
+        return MaterialPageRoute(
+          builder: (_) => const EditProfilePage(),
+          settings: const RouteSettings(name: routeEditProfile),
+        );
+
+      /// Admin group
+      case routeEditProfile:
+        return MaterialPageRoute(
+          builder: (_) => const EditProfilePage(),
+          settings: const RouteSettings(name: routeEditProfile),
+        );
+
+      /// Notes group
+      case routeAddNotes:
+        return MaterialPageRoute(
+          builder: (_) => AddNotesPage(),
+          settings: const RouteSettings(name: routeAddNotes),
+        );
       //   case routeRestaurantSearch:
       //     return MaterialPageRoute(
       //       builder: (_) => const RestaurantSearchScreen(),

@@ -9,7 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 /// --------------
 Color get primaryColor => const Color(0xFF0499C6);
 Color get blackColor => const Color(0xff14142B);
-Color get grayColor => const Color(0xF5F8FFFF);
+Color get grayColor => const Color(0xF598D0D0);
 Color get grayDarkColor => const Color(0xff6F7789);
 
 /// --------------

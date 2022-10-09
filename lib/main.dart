@@ -1,6 +1,7 @@
 import 'package:deptech_test/core/model/admin_model.dart';
 import 'package:deptech_test/core/utils/storage/local_database_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
 import 'core/utils/navigation/navigation_utils.dart';
@@ -56,23 +57,26 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Notes App',
-      navigatorKey: locator<NavigationUtils>().navigatorKey,
-      theme: lightTheme,
-      themeMode: ThemeMode.dark,
-      builder: (ctx, child) {
-        setupScreenUtil(ctx);
-        return MediaQuery(
-          data: MediaQuery.of(ctx).copyWith(textScaleFactor: 1.0),
-          child: ScrollConfiguration(
-            behavior: MyBehavior(),
-            child: child!,
-          ),
-        );
-      },
-      initialRoute: routeSplash,
-      onGenerateRoute: RouterGenerator.generate,
+    return MultiProvider(
+      providers: widget.providers,
+      child: MaterialApp(
+        title: 'Notes App',
+        navigatorKey: locator<NavigationUtils>().navigatorKey,
+        theme: lightTheme,
+        themeMode: ThemeMode.dark,
+        builder: (ctx, child) {
+          setupScreenUtil(ctx);
+          return MediaQuery(
+            data: MediaQuery.of(ctx).copyWith(textScaleFactor: 1.0),
+            child: ScrollConfiguration(
+              behavior: MyBehavior(),
+              child: child!,
+            ),
+          );
+        },
+        initialRoute: routeSplash,
+        onGenerateRoute: RouterGenerator.generate,
+      ),
     );
   }
 }

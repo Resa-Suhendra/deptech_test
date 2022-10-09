@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:deptech_test/core/model/admin_model.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -62,7 +63,7 @@ class LocalDatabaseUtils {
         '$columnPassword TEXT NOT NULL,' +
         '$columnBirthDate TEXT NOT NULL,' +
         '$columnGender TEXT NOT NULL,' +
-        '$columnProfileImage TEXT NOT NULL)');
+        '$columnProfileImage TEXT)');
 
     await db.execute('CREATE TABLE IF NOT EXISTS $tableNotes ' +
         '($columnId INTEGER PRIMARY KEY AUTOINCREMENT, ' +
@@ -70,7 +71,7 @@ class LocalDatabaseUtils {
         '$columnDescription TEXT NOT NULL,' +
         '$columnReminder TEXT NOT NULL,' +
         '$columnReminderInterval TEXT NOT NULL,' +
-        '$columnAttachmentFile TEXT NOT NULL)');
+        '$columnAttachmentFile TEXT)');
   }
 
   Future<int> insertDataAdmin(
@@ -82,6 +83,26 @@ class LocalDatabaseUtils {
       row,
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+  }
+
+  Future<int?> updateImageAdmin(String base64Image) async {
+    Database? db = await instance.database;
+    return Sqflite.firstIntValue(await db!
+        .rawQuery('UPDATE $tableAdmin SET $columnProfileImage = $base64Image'));
+  }
+
+  Future<int> updateProfileAdmin(AdminModel data) async {
+    Database? db = await instance.database;
+    return await db!.rawUpdate(
+        "UPDATE $tableAdmin SET $columnFirstName = ?, $columnLastName = ?, $columnEmail = ?,$columnPassword = ?,$columnGender = ?, $columnBirthDate = ?",
+        [
+          data.firstName,
+          data.lastName,
+          data.email,
+          data.password,
+          data.gender,
+          data.birthDate
+        ]);
   }
 
   Future<int?> queryRowCountAdmin() async {
@@ -98,6 +119,16 @@ class LocalDatabaseUtils {
       tableAdmin,
       where: '$columnEmail = ? AND $columnPassword = ?',
       whereArgs: [email, password],
+    );
+
+    return result;
+  }
+
+  Future<List<Map<String, dynamic>>> queryAdminData() async {
+    Database? db = await instance.database;
+
+    var result = await db!.query(
+      tableAdmin,
     );
 
     return result;

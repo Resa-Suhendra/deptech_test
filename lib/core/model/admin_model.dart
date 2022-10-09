@@ -1,3 +1,5 @@
+import 'package:image_picker/image_picker.dart';
+
 class AdminModel {
   String? firstName;
   String? lastName;

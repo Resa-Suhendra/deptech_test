@@ -1,17 +1,39 @@
 import 'dart:io';
 
-class NoteModel {
+class NotesModel {
   String? title;
   String? description;
-  DateTime? reminder;
-  DateTime? intervalRemider;
-  File? attachment;
+  String? reminder;
+  String? intervalRemider;
+  String? attachment;
 
-  NoteModel({
+  NotesModel({
     this.title,
     this.description,
     this.reminder,
     this.intervalRemider,
     this.attachment,
   });
+
+  factory NotesModel.fromJson(Map<String, dynamic> json) {
+    return NotesModel(
+      title: json['title'] ?? "",
+      description: json['description'] ?? "",
+      reminder: json['reminder'] ?? "",
+      intervalRemider: json['interval_reminder'] ?? "",
+      attachment: json['attachment'] ?? "",
+    );
+  }
+
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      "title": title,
+      "description": description,
+      "reminder": reminder,
+      "interval_remider": intervalRemider,
+      "attachment": attachment,
+    };
+  }
 }

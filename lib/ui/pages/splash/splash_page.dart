@@ -1,4 +1,5 @@
 import 'package:deptech_test/core/utils/navigation/navigation_utils.dart';
+import 'package:deptech_test/core/utils/storage/local_storage_utils.dart';
 import 'package:deptech_test/gen/assets.gen.dart';
 import 'package:deptech_test/ui/constant/constant.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,9 @@ class _SplashPageState extends State<SplashPage> {
   double opacityText = 0;
 
   void initialize() async {
+    var isLogin = await localStorageUtil.getLoginSession();
+
+
     await Future.delayed(const Duration(seconds: 1));
     setState(() {
       opacityLogo = 1;
@@ -26,7 +30,13 @@ class _SplashPageState extends State<SplashPage> {
       opacityText = 1;
     });
     await Future.delayed(const Duration(seconds: 2));
-    navigate.pushToRemoveUntil(routeLogin);
+
+    if (isLogin) {
+      navigate.pushToRemoveUntil(routeDashboard);
+    } else {
+      navigate.pushToRemoveUntil(routeLogin);
+
+    }
   }
 
   @override

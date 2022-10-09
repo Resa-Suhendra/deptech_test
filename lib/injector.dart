@@ -1,3 +1,4 @@
+import 'package:deptech_test/core/utils/storage/local_storage_utils.dart';
 import 'package:get_it/get_it.dart';
 
 import 'core/utils/navigation/navigation_utils.dart';
@@ -17,6 +18,7 @@ Future<void> setupLocator() async {
 
   /// Registering utils
   locator.registerSingleton(NavigationUtils());
+  locator.registerSingleton(LocalStorageUtils());
   // locator.registerLazySingleton(() => FavoriteUtils());
   // locator.registerLazySingleton(() => ScheduleUtils());
   // locator.registerLazySingleton(() => NotificationUtils());

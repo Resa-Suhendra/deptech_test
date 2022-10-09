@@ -27,7 +27,7 @@ final lightTheme = ThemeData(
   colorScheme: const ColorScheme.light()
       .copyWith(
         primary: primaryColor,
-        onPrimary: primaryColor,
+        onPrimary: Colors.white,
       )
       .copyWith(
         primary: primaryColor,
