@@ -4,14 +4,14 @@ class NotesModel {
   String? title;
   String? description;
   String? reminder;
-  String? intervalRemider;
+  String? reminderInterval;
   String? attachment;
 
   NotesModel({
     this.title,
     this.description,
     this.reminder,
-    this.intervalRemider,
+    this.reminderInterval,
     this.attachment,
   });
 
@@ -20,7 +20,7 @@ class NotesModel {
       title: json['title'] ?? "",
       description: json['description'] ?? "",
       reminder: json['reminder'] ?? "",
-      intervalRemider: json['interval_reminder'] ?? "",
+      reminderInterval: json['reminder_interval'] ?? "",
       attachment: json['attachment'] ?? "",
     );
   }
@@ -32,7 +32,7 @@ class NotesModel {
       "title": title,
       "description": description,
       "reminder": reminder,
-      "interval_remider": intervalRemider,
+      "reminder_interval": reminderInterval,
       "attachment": attachment,
     };
   }

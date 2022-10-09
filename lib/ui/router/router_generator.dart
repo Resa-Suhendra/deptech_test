@@ -51,7 +51,7 @@ class RouterGenerator {
       /// Notes group
       case routeAddNotes:
         return MaterialPageRoute(
-          builder: (_) => AddNotesPage(),
+          builder: (_) => const AddNotesPage(),
           settings: const RouteSettings(name: routeAddNotes),
         );
       //   case routeRestaurantSearch:

@@ -28,7 +28,7 @@ class LocalDatabaseUtils {
   static const columnDescription = 'description';
   static const columnReminder = 'reminder';
   static const columnReminderInterval = 'reminder_interval';
-  static const columnAttachmentFile = 'attachment_file';
+  static const columnAttachment = 'attachment';
 
   /// make this a singleton class
   LocalDatabaseUtils._privateConstructor();
@@ -71,7 +71,7 @@ class LocalDatabaseUtils {
         '$columnDescription TEXT NOT NULL,' +
         '$columnReminder TEXT NOT NULL,' +
         '$columnReminderInterval TEXT NOT NULL,' +
-        '$columnAttachmentFile TEXT)');
+        '$columnAttachment TEXT)');
   }
 
   Future<int> insertDataAdmin(
@@ -124,11 +124,11 @@ class LocalDatabaseUtils {
     return result;
   }
 
-  Future<List<Map<String, dynamic>>> queryAdminData() async {
+  Future<List<Map<String, dynamic>>> queryAdminData(String table) async {
     Database? db = await instance.database;
 
     var result = await db!.query(
-      tableAdmin,
+      table,
     );
 
     return result;

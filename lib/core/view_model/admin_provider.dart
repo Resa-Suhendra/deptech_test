@@ -58,7 +58,7 @@ class AdminProvider extends ChangeNotifier {
   }
 
   void getAdminData() async {
-    List<Map<String, dynamic>> res = await dbHelper.queryAdminData();
+    List<Map<String, dynamic>> res = await dbHelper.queryAdminData(LocalDatabaseUtils.tableAdmin);
     _adminModel = AdminModel.fromJson(res[0]);
     notifyListeners();
   }
