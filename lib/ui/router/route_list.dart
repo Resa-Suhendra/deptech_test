@@ -13,3 +13,4 @@ const routeLogin = "/login";
 
 const routeEditProfile = "/edit-profile";
 const routeAddNotes = "/add-notes";
+const routeEditNotes = "/edit-notes";

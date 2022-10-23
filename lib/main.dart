@@ -1,6 +1,12 @@
-import 'package:deptech_test/core/model/admin_model.dart';
+import 'dart:io';
+
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
+import 'package:deptech_test/core/model/admin/admin_model.dart';
+import 'package:deptech_test/core/utils/background/backgorund_service_utils.dart';
+import 'package:deptech_test/core/utils/notification/notification_utils.dart';
 import 'package:deptech_test/core/utils/storage/local_database_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
@@ -12,11 +18,27 @@ import 'ui/constant/themes.dart';
 import 'ui/router/route_list.dart';
 import 'ui/router/router_generator.dart';
 
+final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   /// Setup injector
   await setupLocator();
+
+
+  /// Setup notification
+  final notificationUtils = locator<NotificationUtils>();
+  notificationUtils.initNotifications(flutterLocalNotificationsPlugin);
+  notificationUtils.requestIOSPermissions(flutterLocalNotificationsPlugin);
+
+  /// Setup Alarm Manager
+  final bgService = locator<BackgroundServiceUtils>();
+  bgService.initializeIsolate();
+  if (Platform.isAndroid) {
+    flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>()!.requestPermission();
+    AndroidAlarmManager.initialize();
+  }
 
   /// Registering global providers
   List<SingleChildWidget> providers = await GlobalProviders.register();

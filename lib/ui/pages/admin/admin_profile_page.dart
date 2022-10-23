@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:cross_file_image/cross_file_image.dart';
 import 'package:deptech_test/core/utils/navigation/navigation_utils.dart';
 import 'package:deptech_test/core/utils/storage/local_storage_utils.dart';
 import 'package:deptech_test/core/view_model/admin_provider.dart';
@@ -9,7 +8,6 @@ import 'package:deptech_test/ui/constant/constant.dart';
 import 'package:deptech_test/ui/router/route_list.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 
 class AdminProfilePage extends StatefulWidget {
@@ -22,6 +20,12 @@ class AdminProfilePage extends StatefulWidget {
 class _AdminProfilePageState extends State<AdminProfilePage> {
   final ImagePicker _picker = ImagePicker();
   XFile? _pickedImage;
+
+  @override
+  void initState() {
+    Provider.of<AdminProvider>(context, listen: false).getAdminData();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +42,6 @@ class _AdminProfilePageState extends State<AdminProfilePage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Consumer<AdminProvider>(builder: (context, adminProvider, _) {
-            adminProvider.getAdminData();
-
             if (adminProvider.adminModel != null) {
               return Stack(
                 children: [
@@ -113,16 +115,14 @@ class _AdminProfilePageState extends State<AdminProfilePage> {
                             decoration: BoxDecoration(
                                 color: Colors.grey,
                                 shape: BoxShape.circle,
-                                // image: adminProvider.imageProfile != ''
-                                //     ? DecorationImage(
-                                //         image: XFileImage(
-                                //             adminProvider.imageProfile!),
-                                //         fit: BoxFit.cover,
-                                //       )
-                                //     : DecorationImage(
-                                //         image: adminProvider
-                                //                 .imageFromBase64String()
-                                //             as ImageProvider),
+                                image: adminProvider.adminModel!.profileImage !=
+                                            null &&
+                                        adminProvider.adminModel!.profileImage!
+                                            .isNotEmpty
+                                    ? DecorationImage(
+                                        image: FileImage(File(adminProvider
+                                            .adminModel!.profileImage!)))
+                                    : null,
                                 border: Border.all(
                                     style: BorderStyle.solid,
                                     color: primaryColor)
@@ -134,47 +134,13 @@ class _AdminProfilePageState extends State<AdminProfilePage> {
                             left: 40,
                             child: InkWell(
                               onTap: () async {
-                                // showMaterialModalBottomSheet(
-                                //   context: context,
-                                //   builder: (context) => SingleChildScrollView(
-                                //     controller: ModalScrollController.of(context),
-                                //     child: Container(
-                                //       padding: EdgeInsets.all(20),
-                                //       child: Text("data"),
-                                //     ),
-                                //   ),
-                                // );
-
                                 _pickedImage = await _picker.pickImage(
                                     source: ImageSource.gallery);
 
                                 if (_pickedImage != null) {
-
-                                  var bytes = _pickedImage!.readAsBytes();
-                                  // adminProvider.setImageProfile(base64Encode(bytes));
+                                  adminProvider
+                                      .setImageProfile(_pickedImage!.path);
                                 }
-
-                                // showAdaptiveActionSheet(
-                                //   context: context,
-                                //   title: Text('choose_picture'.tr()),
-                                //   actions: <BottomSheetAction>[
-                                //     BottomSheetAction(
-                                //         title: 'gallery'.tr(),
-                                //         onPressed: () {
-                                //           _pickImageGallery();
-                                //           Navigator.of(context).pop(false);
-                                //         }),
-                                //     BottomSheetAction(
-                                //         title: 'camera'.tr(),
-                                //         onPressed: () {
-                                //           _pickImageCamera();
-                                //           Navigator.of(context).pop(false);
-                                //         }),
-                                //   ],
-                                //   cancelAction: CancelAction(
-                                //       title:
-                                //       'cancel'.tr()), // onPressed parameter is optional by default will dismiss the ActionSheet
-                                // );
                               },
                               child: Container(
                                 padding: const EdgeInsets.all(5),

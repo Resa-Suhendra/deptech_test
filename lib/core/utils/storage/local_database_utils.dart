@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:deptech_test/core/model/admin_model.dart';
+import 'package:deptech_test/core/model/admin/admin_model.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -87,8 +87,8 @@ class LocalDatabaseUtils {
 
   Future<int?> updateImageAdmin(String base64Image) async {
     Database? db = await instance.database;
-    return Sqflite.firstIntValue(await db!
-        .rawQuery('UPDATE $tableAdmin SET $columnProfileImage = $base64Image'));
+    return await db!.rawUpdate(
+        'UPDATE $tableAdmin SET $columnProfileImage = ?', [base64Image]);
   }
 
   Future<int> updateProfileAdmin(AdminModel data) async {
@@ -124,7 +124,7 @@ class LocalDatabaseUtils {
     return result;
   }
 
-  Future<List<Map<String, dynamic>>> queryAdminData(String table) async {
+  Future<List<Map<String, dynamic>>> queryAllData(String table) async {
     Database? db = await instance.database;
 
     var result = await db!.query(
@@ -132,5 +132,20 @@ class LocalDatabaseUtils {
     );
 
     return result;
+  }
+
+  Future<List<Map<String, dynamic>>> getNotesById(String id) async {
+    Database? db = await instance.database;
+
+    var result =
+        await db!.query(tableNotes, where: "$columnId = ?", whereArgs: [id]);
+
+    return result;
+  }
+
+  Future<int?> deleteNotes(int id) async {
+    Database? db = await instance.database;
+
+    return await db!.rawDelete("DELETE FROM $tableNotes WHERE _id = ?", [id]);
   }
 }

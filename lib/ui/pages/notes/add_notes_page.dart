@@ -1,10 +1,12 @@
-import 'package:deptech_test/core/model/notes_model.dart';
-import 'package:deptech_test/core/utils/extensions/string_extension.dart';
+import 'dart:io';
+
+import 'package:deptech_test/core/model/notes/notes_model.dart';
 import 'package:deptech_test/core/utils/navigation/navigation_utils.dart';
 import 'package:deptech_test/core/view_model/notes_provider.dart';
 import 'package:deptech_test/ui/constant/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -22,10 +24,13 @@ class _AddNotesPageState extends State<AddNotesPage> {
 
   final descriptionController = TextEditingController();
 
+  final ImagePicker _picker = ImagePicker();
+
   bool isReminder = false;
 
   String _reminder = '';
   String _interval = '0';
+  String _pickedImage = '';
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +45,6 @@ class _AddNotesPageState extends State<AddNotesPage> {
         ),
         body: SingleChildScrollView(
           child: Container(
-            height: deviceHeight,
             decoration: const BoxDecoration(
               color: Colors.white,
             ),
@@ -109,6 +113,54 @@ class _AddNotesPageState extends State<AddNotesPage> {
                     SizedBox(
                       height: setHeight(100),
                     ),
+                    Text(
+                      "Insert Image",
+                      style: styleSubtitle.copyWith(
+                        fontSize: setFontSize(50),
+                      ),
+                    ),
+                    SizedBox(
+                      height: setHeight(20),
+                    ),
+                    InkWell(
+                      onTap: () async {
+                        _picker
+                            .pickImage(source: ImageSource.gallery)
+                            .then((value) {
+                          if (value != null) {
+                            setState(() {
+                              _pickedImage = value.path;
+                            });
+                          }
+                        });
+                      },
+                      child: Container(
+                        height: setHeight(400),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(borderRadius),
+                            color: grayColor,
+                            image: _pickedImage.isNotEmpty
+                                ? DecorationImage(
+                                    image: FileImage(File(_pickedImage)),
+                                    fit: BoxFit.cover,
+                                  )
+                                : null,
+                            border: Border.all(
+                                style: BorderStyle.solid, color: primaryColor)),
+                        child: _pickedImage == ''
+                            ? const Center(
+                                child: Icon(
+                                  Icons.image,
+                                  color: Colors.white,
+                                  size: 50,
+                                ),
+                              )
+                            : Container(),
+                      ),
+                    ),
+                    SizedBox(
+                      height: setHeight(100),
+                    ),
                     Row(
                       children: [
                         Text(
@@ -146,7 +198,7 @@ class _AddNotesPageState extends State<AddNotesPage> {
                               DatePicker.showDateTimePicker(
                                 context,
                                 currentTime: init,
-                                onChanged: (value) {
+                                onConfirm: (value) {
                                   setState(() {
                                     _reminder = DateFormat('dd-MM-yyyy HH:mm')
                                         .format(value);
@@ -252,12 +304,12 @@ class _AddNotesPageState extends State<AddNotesPage> {
                               description: descriptionController.text,
                               reminder: _reminder,
                               reminderInterval: _interval,
+                              attachment: _pickedImage,
                             );
 
                             var res = await notesProvider.createNotes(data);
 
                             if (res > 0) {
-
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   backgroundColor: primaryColor,
@@ -277,7 +329,7 @@ class _AddNotesPageState extends State<AddNotesPage> {
                           minimumSize: const Size.fromHeight(50),
                         ),
                         child: Text(
-                          'Login',
+                          'Save',
                           style: styleTitle.copyWith(
                             fontSize: setFontSize(50),
                             color: Colors.white,

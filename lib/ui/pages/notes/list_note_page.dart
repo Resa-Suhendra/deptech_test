@@ -40,13 +40,30 @@ class _ListNotesPageState extends State<ListNotesPage> {
           )),
       body: SingleChildScrollView(
         child: Consumer<NotesProvider>(builder: (context, notesProvider, _) {
-
           print(notesProvider.listNotes.length);
 
           return Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: notesProvider.listNotes.map((e) {
-              return Text(e.title!);
+              return ListTile(
+                title: Text(e.title!),
+                leading: IconButton(
+                  onPressed: () {
+                    navigate.pushTo(routeEditNotes, data: e.id);
+                  },
+                  icon: Icon(Icons.edit),
+                ),
+                trailing: IconButton(
+                  onPressed: () {
+                    notesProvider.deleteNotes(e.id!);
+                    notesProvider.getAllNotes();
+                  },
+                  icon: Icon(Icons.delete),
+                ),
+                subtitle: Text(e.description!),
+                focusColor: Colors.white,
+                tileColor: Colors.white,
+              );
             }).toList(),
           );
         }),

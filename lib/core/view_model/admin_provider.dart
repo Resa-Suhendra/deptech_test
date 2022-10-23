@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:deptech_test/core/model/admin_model.dart';
+import 'package:deptech_test/core/model/admin/admin_model.dart';
 import 'package:deptech_test/core/utils/storage/local_database_utils.dart';
 import 'package:deptech_test/core/utils/storage/local_storage_utils.dart';
 import 'package:flutter/foundation.dart';
@@ -21,9 +21,9 @@ class AdminProvider extends ChangeNotifier {
 
   bool get isLoadingLogin => _isLoadingLogin;
 
-  XFile? _imageProfile;
-
-  XFile? get imageProfile => _imageProfile;
+  // String? _imageProfile;
+  //
+  // String? get imageProfile => _imageProfile;
 
   void setLoadingLogin(bool value) {
     _isLoadingLogin = value;
@@ -32,10 +32,13 @@ class AdminProvider extends ChangeNotifier {
 
   final dbHelper = LocalDatabaseUtils.instance;
 
-  void setImageProfile(String value) {
-    dbHelper.updateImageAdmin(value);
-
-    notifyListeners();
+  void setImageProfile(String value) async {
+    var res = await dbHelper.updateImageAdmin(value);
+    print(" Result Upd : $res");
+    if (res != null && res > 0) {
+      getAdminData();
+      notifyListeners();
+    }
   }
 
   Future<AdminModel?> loginAdmin(String email, String password) async {
@@ -58,7 +61,8 @@ class AdminProvider extends ChangeNotifier {
   }
 
   void getAdminData() async {
-    List<Map<String, dynamic>> res = await dbHelper.queryAdminData(LocalDatabaseUtils.tableAdmin);
+    List<Map<String, dynamic>> res =
+        await dbHelper.queryAllData(LocalDatabaseUtils.tableAdmin);
     _adminModel = AdminModel.fromJson(res[0]);
     notifyListeners();
   }

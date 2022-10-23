@@ -1,4 +1,4 @@
-import 'package:deptech_test/core/model/admin_model.dart';
+import 'package:deptech_test/core/model/admin/admin_model.dart';
 import 'package:deptech_test/core/utils/extensions/string_extension.dart';
 import 'package:deptech_test/core/utils/navigation/navigation_utils.dart';
 import 'package:deptech_test/core/view_model/admin_provider.dart';

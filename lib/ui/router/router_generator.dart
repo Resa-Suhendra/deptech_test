@@ -2,6 +2,7 @@ import 'package:deptech_test/ui/pages/admin/edit_profile_page.dart';
 import 'package:deptech_test/ui/pages/dashboard/dashboard_page.dart';
 import 'package:deptech_test/ui/pages/login/login_page.dart';
 import 'package:deptech_test/ui/pages/notes/add_notes_page.dart';
+import 'package:deptech_test/ui/pages/notes/edit_notes_page.dart';
 import 'package:deptech_test/ui/pages/splash/splash_page.dart';
 import 'package:deptech_test/ui/router/route_list.dart';
 import 'package:flutter/material.dart';
@@ -54,6 +55,15 @@ class RouterGenerator {
           builder: (_) => const AddNotesPage(),
           settings: const RouteSettings(name: routeAddNotes),
         );
+
+      case routeEditNotes:
+        if (args is int) {
+          return MaterialPageRoute(
+            builder: (_) => EditNotesPage(id: args),
+            settings: const RouteSettings(name: routeAddNotes),
+          );
+        }
+        break;
       //   case routeRestaurantSearch:
       //     return MaterialPageRoute(
       //       builder: (_) => const RestaurantSearchScreen(),
